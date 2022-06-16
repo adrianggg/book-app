@@ -23,15 +23,18 @@
     
     renderBooks(dataSource){
       const thisBookList = this;
-      dataSource.ratingBgc = thisBookList.determineRatingBgc(dataSource.rating);
-      dataSource.ratingWidth = dataSource.rating*10;
-      const booksTemplate = Handlebars.compile(document.querySelector('#template-book').innerHTML);
-      const generatedHTML = booksTemplate(dataSource);  
+      for(let book in dataSource){
 
-      console.log(dataSource);
-      const booksElement =  utils.createDOMFromHTML(generatedHTML);
-      
-      thisBookList.dom.wrapper.appendChild(booksElement);
+        dataSource[book].ratingBgc = thisBookList.determineRatingBgc(dataSource[book].rating);
+        dataSource[book].ratingWidth = dataSource[book].rating*10;
+        const booksTemplate = Handlebars.compile(document.querySelector('#template-book').innerHTML);
+        const generatedHTML = booksTemplate(dataSource[book]);  
+        
+        console.log(dataSource);
+        const booksElement =  utils.createDOMFromHTML(generatedHTML);
+        
+        thisBookList.dom.wrapper.appendChild(booksElement);
+      }
     }
     initAcitons(element){
       const thisBookList = this;
@@ -63,7 +66,10 @@
             thisBookList.filters.push(event.target.value);
           }
         }
-        thisBookList.filterBooks(element);
+        for(let book in element){
+
+          thisBookList.filterBooks(element[book]);
+        }
         console.log(thisBookList.filters);
       });
     }
@@ -93,9 +99,9 @@
   const app = {
     initMenu: function(){
       console.log('thisApp.data2: ',dataSource);
-      for(let bookData of dataSource.books){
-        new BookList(bookData);
-      }
+     
+      new BookList(dataSource.books);
+     
     },
     init: function(){
       console.log('thisApp.data: ',dataSource);
